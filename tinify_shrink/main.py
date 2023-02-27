@@ -1,37 +1,37 @@
 # -*- coding: utf-8 -*-
 
-from PIL import Image
-import sys
+
 import time
 import os
+import urllib.request
+import requests
+import datetime
+import sys
+import tinify
 
+# You should change this to your API key
 
-def image_border(src, dst, width=300):
+tinify.key = "NFKk611fT5YqddL4cpR1DxJ9tfZq3bSM" # 此处填入你自己申请的API key
+
+# API upload 
+def image_shrink(src, dst):
     '''
     src: (str) 图片路径
     dst: (str) 保存路径
-    width: (int) 宽度 (默认是300)
+
     '''
-    # 读取图片
-    img_ori = Image.open(src)
-    w_ori = img_ori.size[0]
-    h_ori = img_ori.size[1]
+    # 使用本地文件上传
+    source = tinify.from_file(src)
+    source.to_file(dst)
 
-    w_percent = (width / float(w_ori))
-    h_new = int((float(h_ori) * float(w_percent)))
+    # # 使用二进制上传
+    # with open("unoptimized.jpg", 'rb') as source:
+    #     source_data = source.read()
+    #     result_data = tinify.from_buffer(source_data).to_buffer()
 
-    # img_new = img_ori.resize((width, h_new), Image.ANTIALIAS)
-    # img_new = img_new.convert('P', palette=Image.ADAPTIVE, colors=256)
-
-    img_new = img_ori.convert('P', palette=Image.ADAPTIVE, colors=256)
-    img_new = img_new.resize((width, h_new), Image.ANTIALIAS)
-    
-
-
-    dst = os.path.splitext(dst)[0] + ".png"
-    img_new.save(dst, optimize=True)
-
-
+    # # 使用url上传
+    # source = tinify.from_url("https://cdn.tinypng.com/images/panda-happy.png")
+    # source.to_file("optimized.jpg")
 
 
 
@@ -62,19 +62,6 @@ def walk_folder_for_images(folder_name):
         
     return image_list
 
-    # 删除遍历段，只找当前目录
-'''
-    for path, dir_list, file_list in os.walk(folder_name):
-        for file_name in file_list:
-            if file_name.endswith(('.png', '.jpg')):
-                image_list.append(os.path.join(path, file_name))
-                print(os.path.join(path, file_name))
-                pass
-'''
-
-
-
-
 def batch_image_processing(image_list):
 
 
@@ -87,7 +74,7 @@ def batch_image_processing(image_list):
         # move to along with the img_new.save
         #new_image_path = os.path.splitext(new_image_path)[0]+ ".png"
 
-        image_border(image_list[i], new_image_path,300)
+        image_shrink(image_list[i], new_image_path)
 
     os.system("pause")
 

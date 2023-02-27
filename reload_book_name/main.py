@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# # 下载并存储必应每日壁纸到指定位置
+
 
 import time
 import os
